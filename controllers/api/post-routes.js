@@ -91,12 +91,16 @@ router.post('/', (req, res) => {
 
 router.put('/upvote', (req, res) => {
   // custom static method created in models/Post.js
-  Post.upvote(req.body, { Vote, Comment, User })
+  //first check if session exists
+  if (req.session) {
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
     .then(updatedVoteData => res.json(updatedVoteData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
+  }
+ 
 });
 
 router.put('/:id', (req, res) => {
